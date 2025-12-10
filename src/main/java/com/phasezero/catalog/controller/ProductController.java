@@ -8,6 +8,7 @@ import com.phasezero.catalog.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +17,12 @@ import java.util.List;
 
 @Tag(name = "Products", description = "Operations on the product catalog")
 @RestController
+@AllArgsConstructor
 @RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @Operation(
             summary = "Add new product",
@@ -36,16 +35,31 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
-    @Operation(
-            summary = "List all products",
-            description = "Returns the full list of all products stored in the catalog."
-    )
+//    @Operation(
+//            summary = "List all products",
+//            description = "Returns the full list of all products stored in the catalog."
+//    )
+//    @GetMapping
+//    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
+//        List<ProductResponse> list = productService.getAllProducts();
+//        ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
+//        return ResponseEntity.ok(body);
+//    }
+@Operation(
+        summary = "List all products with pagination",
+        description = "Returns a paginated list of all products stored in the catalog. "
+                + "Use 'page' (0-based) and 'size' to control the result set."
+)
     @GetMapping
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-        List<ProductResponse> list = productService.getAllProducts();
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+
+        List<ProductResponse> list = productService.getAllProducts(page, size);
         ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
         return ResponseEntity.ok(body);
     }
+
 
     @Operation(
             summary = "Search products by name",

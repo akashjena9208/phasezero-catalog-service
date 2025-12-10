@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,15 +53,30 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.data.partNumber").value("P-1001"));
     }
 
+//    @Test
+//    void getAllProducts_returnsList() throws Exception {
+//        Mockito.when(productService.getAllProducts())
+//                .thenReturn(java.util.List.of(
+//                        new ProductResponse(1L, "P-1001", "hydraulic filter", "filters", 1200.5, 10)
+//                ));
+//
+//        mockMvc.perform(get("/products"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data[0].partNumber").value("P-1001"));
+//    }
+
     @Test
     void getAllProducts_returnsList() throws Exception {
-        Mockito.when(productService.getAllProducts())
-                .thenReturn(java.util.List.of(
+
+        Mockito.when(productService.getAllProducts(0, 20))
+                .thenReturn(List.of(
                         new ProductResponse(1L, "P-1001", "hydraulic filter", "filters", 1200.5, 10)
                 ));
 
-        mockMvc.perform(get("/products"))
+        mockMvc.perform(get("/products?page=0&size=20"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].partNumber").value("P-1001"));
     }
+
 }

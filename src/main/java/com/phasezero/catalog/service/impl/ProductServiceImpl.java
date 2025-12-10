@@ -14,6 +14,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,11 +66,27 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    //here we can you used also  pagination + sorting + indexing + filter to  when data fetch that time our backend code is
+//    @Override
+//    public List<ProductResponse> getAllProducts() {
+//        log.debug("Fetching all products");
+//        List<Product> products = productRepository.findAll();
+//        return products.stream()
+//                .map(product -> ProductMapper.toResponse(product))
+//                .collect(Collectors.toList());
+//    }
+
     @Override
-    public List<ProductResponse> getAllProducts() {
-        log.debug("Fetching all products");
-        List<Product> products = productRepository.findAll();
-        return products.stream()
+    public List<ProductResponse> getAllProducts(int page, int size) {
+        log.debug("Fetching products with pagination page={}, size={}", page, size);
+
+        // Build Pageable (can also add default sort if you want consistent order)
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        // Only map current page content to DTOs
+        return productPage.getContent().stream()
                 .map(product -> ProductMapper.toResponse(product))
                 .collect(Collectors.toList());
     }

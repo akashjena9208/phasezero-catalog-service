@@ -3,13 +3,16 @@ package com.phasezero.catalog.service;
 import com.phasezero.catalog.dto.ProductRequest;
 import com.phasezero.catalog.dto.ProductResponse;
 import com.phasezero.catalog.exception.ProductAlreadyExistsException;
-
 import com.phasezero.catalog.model.Product;
 import com.phasezero.catalog.repository.ProductRepository;
 import com.phasezero.catalog.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -17,20 +20,17 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class ProductServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
 
+    @InjectMocks
     private ProductServiceImpl productService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        productService = new ProductServiceImpl(productRepository);
-    }
 
     private ProductRequest createValidRequest() {
         return new ProductRequest(
@@ -43,7 +43,7 @@ class ProductServiceImplTest {
     }
 
     private Product createEntityFromRequest(ProductRequest request) {
-        // Simulate what ProductMapper.toEntity does
+        // Simulate what ProductMapper.toEntity does (for test purposes)
         return Product.builder()
                 .id(1L)
                 .partNumber(request.partNumber().trim())
@@ -131,7 +131,8 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void getAllProducts_returnsList() {
+    void getAllProducts_returnsPaginatedList() {
+        // Arrange
         Product p1 = Product.builder()
                 .id(1L).partNumber("P-1001").partName("hydraulic filter")
                 .category("filters").price(1200.50).stock(10)
@@ -144,14 +145,21 @@ class ProductServiceImplTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        when(productRepository.findAll()).thenReturn(Arrays.asList(p1, p2));
+        int page = 0;
+        int size = 2;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Product> productPage = new PageImpl<>(Arrays.asList(p1, p2), pageable, 2);
 
-        List<ProductResponse> result = productService.getAllProducts();
+        when(productRepository.findAll(pageable)).thenReturn(productPage);
 
+        // Act
+        List<ProductResponse> result = productService.getAllProducts(page, size);
+
+        // Assert
         assertEquals(2, result.size());
         assertEquals("P-1001", result.get(0).partNumber());
         assertEquals("P-1002", result.get(1).partNumber());
-        verify(productRepository).findAll();
+        verify(productRepository).findAll(pageable);
     }
 
     @Test
