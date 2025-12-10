@@ -24,7 +24,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-
+    // 1:- Add new product
     @Operation(
             summary = "Add new product",
             description = "Creates a new product enforcing unique partNumber, lowercase partName, and non-negative price/stock."
@@ -36,6 +36,8 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
+
+    //2:- List all products
     @Operation(
             summary = "List all products with pagination",
             description = "Returns a paginated list of all products stored in the catalog. "
@@ -51,18 +53,7 @@ public class ProductController {
         return ResponseEntity.ok(body);
     }
 
-
-    //    @Operation(
-//            summary = "Search products by name",
-//            description = "Search products whose partName contains the given text (case-insensitive)."
-//    )
-//    @GetMapping("/search")
-//    public ResponseEntity<ApiResponse<List<ProductResponse>>> searchByName(
-//            @RequestParam("name") String name) {
-//        List<ProductResponse> list = productService.searchByName(name);
-//        ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
-//        return ResponseEntity.ok(body);
-//    }
+    //3:- Search by name
     @Operation(
             summary = "Search products by name",
             description = "Search products whose partName contains the given text (case-insensitive)."
@@ -82,6 +73,7 @@ public class ProductController {
     }
 
 
+    // 4- Filter by category
     @Operation(
             summary = "Filter by category",
             description = "Return all products for a given category (case-insensitive match)."
@@ -94,6 +86,7 @@ public class ProductController {
         return ResponseEntity.ok(body);
     }
 
+    // 5-  Sort products by price
     @Operation(
             summary = "Sort products by price",
             description = "Return all products sorted by price in ascending order."
@@ -111,6 +104,7 @@ public class ProductController {
     }
 
 
+    //6:-Return total inventory value
     @Operation(
             summary = "Total inventory value",
             description = "Returns sum(price * stock) for all products."
