@@ -3,6 +3,7 @@ package com.phasezero.catalog.controller;
 import com.phasezero.catalog.dto.ApiResponse;
 import com.phasezero.catalog.dto.ProductRequest;
 import com.phasezero.catalog.dto.ProductResponse;
+import com.phasezero.catalog.exception.ResourceNotFoundException;
 import com.phasezero.catalog.service.ProductService;
 import com.phasezero.catalog.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,6 +52,17 @@ public class ProductController {
     }
 
 
+    //    @Operation(
+//            summary = "Search products by name",
+//            description = "Search products whose partName contains the given text (case-insensitive)."
+//    )
+//    @GetMapping("/search")
+//    public ResponseEntity<ApiResponse<List<ProductResponse>>> searchByName(
+//            @RequestParam("name") String name) {
+//        List<ProductResponse> list = productService.searchByName(name);
+//        ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
+//        return ResponseEntity.ok(body);
+//    }
     @Operation(
             summary = "Search products by name",
             description = "Search products whose partName contains the given text (case-insensitive)."
@@ -58,10 +70,17 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> searchByName(
             @RequestParam("name") String name) {
+
         List<ProductResponse> list = productService.searchByName(name);
+
+        if (list.isEmpty()) {
+            throw new ResourceNotFoundException("No products found matching name: " + name);
+        }
+
         ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
         return ResponseEntity.ok(body);
     }
+
 
     @Operation(
             summary = "Filter by category",
@@ -82,9 +101,15 @@ public class ProductController {
     @GetMapping("/sorted-by-price")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getProductsSortedByPrice() {
         List<ProductResponse> list = productService.sortByPriceAscending();
+
+        if (list.isEmpty()) {
+            throw new ResourceNotFoundException("No products found in catalog");
+        }
+
         ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
         return ResponseEntity.ok(body);
     }
+
 
     @Operation(
             summary = "Total inventory value",
