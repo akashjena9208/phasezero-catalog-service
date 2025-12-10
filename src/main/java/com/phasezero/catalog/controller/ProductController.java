@@ -35,21 +35,11 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
-//    @Operation(
-//            summary = "List all products",
-//            description = "Returns the full list of all products stored in the catalog."
-//    )
-//    @GetMapping
-//    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts() {
-//        List<ProductResponse> list = productService.getAllProducts();
-//        ApiResponse<List<ProductResponse>> body = ResponseUtil.ok(list);
-//        return ResponseEntity.ok(body);
-//    }
-@Operation(
-        summary = "List all products with pagination",
-        description = "Returns a paginated list of all products stored in the catalog. "
-                + "Use 'page' (0-based) and 'size' to control the result set."
-)
+    @Operation(
+            summary = "List all products with pagination",
+            description = "Returns a paginated list of all products stored in the catalog. "
+                    + "Use 'page' (0-based) and 'size' to control the result set."
+    )
     @GetMapping
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,

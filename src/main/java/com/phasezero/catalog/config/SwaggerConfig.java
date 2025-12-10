@@ -16,8 +16,12 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("PhaseZero Product Catalog API")
-                        .description("Backend microservice for managing product catalog data")
+                        .description("Backend microservice for managing product catalog data.")
                         .version("1.0")
+                        .contact(new io.swagger.v3.oas.models.info.Contact()
+                                .name("Akash Jena")
+                                .email("akashjena9208@gmail.com")
+                        )
                 )
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("Local Server")

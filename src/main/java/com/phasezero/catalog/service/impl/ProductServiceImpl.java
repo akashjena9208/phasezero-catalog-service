@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    @CacheEvict(value = { "sortedByPrice", "inventoryValue" }, allEntries = true)
+    @CacheEvict(value = {"sortedByPrice", "inventoryValue"}, allEntries = true)
     public ProductResponse addProduct(ProductRequest request) {
         log.info("Adding product with partNumber={}", request.partNumber());
 
@@ -65,16 +65,6 @@ public class ProductServiceImpl implements ProductService {
                     "Product with partNumber '" + partNumberTrimmed + "' already exists");
         }
     }
-
-    //here we can you used also  pagination + sorting + indexing + filter to  when data fetch that time our backend code is
-//    @Override
-//    public List<ProductResponse> getAllProducts() {
-//        log.debug("Fetching all products");
-//        List<Product> products = productRepository.findAll();
-//        return products.stream()
-//                .map(product -> ProductMapper.toResponse(product))
-//                .collect(Collectors.toList());
-//    }
 
     @Override
     public List<ProductResponse> getAllProducts(int page, int size) {

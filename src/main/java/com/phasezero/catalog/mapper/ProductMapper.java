@@ -8,7 +8,8 @@ import com.phasezero.catalog.util.StringUtil;
 
 public final class ProductMapper {
 
-    private ProductMapper() {}
+    private ProductMapper() {
+    }
 
     public static Product toEntity(ProductRequest request) {
         return Product.builder()

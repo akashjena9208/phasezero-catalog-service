@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  catalog:
+    build: .
+    image: phasezero-catalog-service:local
+    container_name: phasezero-catalog-service
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Xmx512m
+    volumes:
+      # Only useful if you set H2 to file mode (jdbc:h2:file:./data/catalogdb)
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/products"]
+      interval: 15s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
