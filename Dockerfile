@@ -1,33 +1,22 @@
-# ---------- build stage ----------
-FROM maven:3.9.4-eclipse-temurin-17 AS build
-WORKDIR /workspace
-
-# copy pom + download dependencies early (speeds up rebuilds)
-COPY pom.xml .
-RUN mvn -q -B dependency:go-offline
-
-# copy sources and build
-COPY src ./src
-RUN mvn -q -B package -DskipTests
-
-# ---------- runtime stage ----------
-FROM eclipse-temurin:17-jre-jammy
-ARG JAR_FILE=/workspace/target/phasezero-catalog-service-0.0.1-SNAPSHOT.jar
+# -------- Build Stage --------
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# create non-root user
-RUN useradd --create-home --shell /bin/bash appuser || true
-USER appuser
+# Copy pom first to leverage Docker layer caching
+COPY pom.xml .
+RUN mvn dependency:go-offline
 
-# copy jar from build stage
-COPY --from=build ${JAR_FILE} ./app.jar
+# Copy source code and build jar
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Expose service port
+# -------- Runtime Stage --------
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+
+# Copy the final jar from build stage
+COPY --from=build /app/target/phasezerocatalogservice.jar app.jar
+
 EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# simple healthcheck hitting /products (returns 200)
-HEALTHCHECK --interval=15s --timeout=3s --retries=5 \
-  CMD curl -f http://localhost:8080/products || exit 1
-
-# runtime entry
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar /app/app.jar"]
