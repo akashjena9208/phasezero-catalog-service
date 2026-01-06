@@ -829,6 +829,12 @@ The full OpenAPI JSON is included below.
 </details>
 
 ---
+# Build image
+docker build -t catalog-service .
+
+# Run container
+docker run -p 8080:8080 catalog-service
+---
 ## 🙌 Author
 **Akash Jena** 
 **akashjena9208@gmail.com**
