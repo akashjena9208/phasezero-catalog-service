@@ -4,6 +4,7 @@ This project follows best practices in API design, data modeling, validation, er
 
 This project is developed as part of the **PHASEZERO Backend Java Practical Assignment**.
 
+
 ---
 ## Base URL
 
@@ -13,6 +14,16 @@ http://localhost:8080
 ## Swagger UI (API documentation & testing)
 ```text
 http://localhost:8080/swagger-ui/index.html
+```
+### Run The Application Using Docker
+---
+# Build image
+```
+docker build -t catalog-service .
+```
+# Run container
+```
+docker run -p 8080:8080 catalog-service
 ```
 ---
 
