@@ -852,6 +852,6 @@ docker run -p 8080:8080 catalog-service
 ## 🙌 Author
 **Akash Jena** 
 **akashjena9208@gmail.com**
-**Backend Java Developer**
+**Full Stack Java Developer**
 
 
