@@ -1,5 +1,5 @@
 # PhaseZero Catalog Service API
-A backend microservice built using **Spring Boot**  and **Java 17**  that manages a product catalogue and exposes REST APIs for product operations such as add, search, filter, sort, pagination, and inventory value calculation.
+A backend monolithic built using **Spring Boot**  and **Java 17**  that manages a product catalogue and exposes REST APIs for product operations such as add, search, filter, sort, pagination, and inventory value calculation.
 This project follows best practices in API design, data modeling, validation, error handling, and caching.
 
 This project is developed as part of the **PHASEZERO Backend Java Practical Assignment**.
