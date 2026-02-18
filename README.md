@@ -850,9 +850,9 @@ docker build -t catalog-service .
 docker run -p 8080:8080 catalog-service
 ```
 ---
+---
 ## 🙌 Author
 **Akash Jena** 
 **akashjena9208@gmail.com**
 **Full Stack Java Developer**
-
-
+---
