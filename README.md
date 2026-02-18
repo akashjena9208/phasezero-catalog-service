@@ -29,7 +29,8 @@ docker run -p 8080:8080 catalog-service
 
 ## 🚀 Tech Stack
 
-- Java 17
+- Java 8
+- JDK 17
 - Spring Boot
 - Spring Web
 - Spring Data JPA
